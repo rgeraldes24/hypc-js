@@ -1,10 +1,10 @@
 {
-  "name": "solc",
-  "version": "0.8.28",
-  "description": "Solidity compiler",
+  "name": "hypc",
+  "version": "0.1.0",
+  "description": "Hyperion compiler",
   "main": "index.js",
   "bin": {
-    "solcjs": "solc.js"
+    "hypcjs": "hypc.js"
   },
   "scripts": {
     "build": "tsc",
@@ -24,11 +24,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ethereum/solc-js.git"
+    "url": "git+https://github.com/theQRL/hypc-js.git"
   },
   "keywords": [
-    "ethereum",
-    "solidity",
+    "zond",
+    "hyperion",
     "compiler"
   ],
   "engines": {
@@ -42,9 +42,9 @@
   "author": "chriseth",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ethereum/solc-js/issues"
+    "url": "https://github.com/theQRL/hypc-js/issues"
   },
-  "homepage": "https://github.com/ethereum/solc-js#readme",
+  "homepage": "https://github.com/theQRL/hypc-js#readme",
   "dependencies": {
     "command-exists": "^1.2.8",
     "commander": "^8.1.0",
@@ -75,7 +75,7 @@
   },
   "nyc": {
     "exclude": [
-      "soljson.js",
+      "hypjson.js",
       "dist"
     ]
   }

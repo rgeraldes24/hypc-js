@@ -59,7 +59,7 @@ function downloadBinary (outputName, version, expectedHash) {
   });
 }
 
-console.log('Downloading correct solidity binary...');
+console.log('Downloading correct hyperion binary...');
 
 getVersionList(function (list) {
   list = JSON.parse(list);
@@ -71,5 +71,5 @@ getVersionList(function (list) {
     process.exit(1);
   }
   const expectedHash = expectedFile.keccak256;
-  downloadBinary('soljson.js', releaseFileName, expectedHash);
+  downloadBinary('hypjson.js', releaseFileName, expectedHash);
 });

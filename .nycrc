@@ -1,7 +1,7 @@
 {
     "exclude": [
         "coverage",
-        "dist/soljson.js",
+        "dist/hypjson.js",
         "**/test/**"
     ],
     "extensions": [

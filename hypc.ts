@@ -4,7 +4,7 @@ import * as commander from 'commander';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import solc from './index';
+import hypc from './index';
 import smtchecker from './smtchecker';
 import smtsolver from './smtsolver';
 
@@ -23,8 +23,8 @@ const commanderParseInt = function (value) {
   return parsedValue;
 };
 
-program.name('solcjs');
-program.version(solc.version());
+program.name('hypcjs');
+program.version(hypc.version());
 program
   .option('--version', 'Show version and exit.')
   .option('--optimize', 'Enable bytecode optimizer.', false)
@@ -94,7 +94,7 @@ function makeSourcePathRelativeIfPossible (sourcePath) {
       : []
   );
 
-  // Compared to base path stripping logic in solc this is much simpler because path.resolve()
+  // Compared to base path stripping logic in hypc this is much simpler because path.resolve()
   // handles symlinks correctly (does not resolve them except in work dir) and strips .. segments
   // from paths going beyond root (e.g. `/../../a/b/c` -> `/a/b/c/`). It's simpler also because it
   // ignores less important corner cases: drive letters are not stripped from absolute paths on
@@ -126,7 +126,7 @@ if (options.basePath || !options.standardJson) { callbacks = { import: readFileC
 if (options.standardJson) {
   const input = fs.readFileSync(process.stdin.fd).toString('utf8');
   if (program.verbose) { console.log('>>> Compiling:\n' + reformatJsonIfRequested(input) + '\n'); }
-  let output = reformatJsonIfRequested(solc.compile(input, callbacks));
+  let output = reformatJsonIfRequested(hypc.compile(input, callbacks));
 
   try {
     if (smtsolver.availableSolvers.length === 0) {
@@ -135,7 +135,7 @@ if (options.standardJson) {
       const inputJSON = smtchecker.handleSMTQueries(JSON.parse(input), JSON.parse(output), smtsolver.smtSolver, smtsolver.availableSolvers[0]);
       if (inputJSON) {
         if (program.verbose) { console.log('>>> Retrying compilation with SMT:\n' + toFormattedJson(inputJSON) + '\n'); }
-        output = reformatJsonIfRequested(solc.compile(JSON.stringify(inputJSON), callbacks));
+        output = reformatJsonIfRequested(hypc.compile(JSON.stringify(inputJSON), callbacks));
       }
     }
   } catch (e) {
@@ -189,7 +189,7 @@ for (let i = 0; i < files.length; i++) {
 }
 
 const cliInput = {
-  language: 'Solidity',
+  language: 'Hyperion',
   settings: {
     optimizer: {
       enabled: options.optimize,
@@ -197,14 +197,14 @@ const cliInput = {
     },
     outputSelection: {
       '*': {
-        '*': ['abi', 'evm.bytecode']
+        '*': ['abi', 'zvm.bytecode']
       }
     }
   },
   sources: sources
 };
 if (program.verbose) { console.log('>>> Compiling:\n' + toFormattedJson(cliInput) + '\n'); }
-const output = JSON.parse(solc.compile(JSON.stringify(cliInput), callbacks));
+const output = JSON.parse(hypc.compile(JSON.stringify(cliInput), callbacks));
 
 let hasError = false;
 
@@ -239,7 +239,7 @@ for (const fileName in output.contracts) {
     contractFileName = contractFileName.replace(/[:./\\]/g, '_');
 
     if (options.bin) {
-      writeFile(contractFileName + '.bin', output.contracts[fileName][contractName].evm.bytecode.object);
+      writeFile(contractFileName + '.bin', output.contracts[fileName][contractName].zvm.bytecode.object);
     }
 
     if (options.abi) {

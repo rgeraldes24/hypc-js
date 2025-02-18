@@ -26,14 +26,14 @@ build/Release
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
-# solc-js
-soljson.js
-test_DAO_Token_sol_Token.abi
-test_DAO_Token_sol_Token.bin
-test_DAO_Token_sol_TokenInterface.abi
-test_DAO_Token_sol_TokenInterface.bin
-test_DAO_Token_sol_tokenRecipient.abi
-test_DAO_Token_sol_tokenRecipient.bin
+# hypc-js
+hypjson.js
+test_DAO_Token_hyp_Token.abi
+test_DAO_Token_hyp_Token.bin
+test_DAO_Token_hyp_TokenInterface.abi
+test_DAO_Token_hyp_TokenInterface.bin
+test_DAO_Token_hyp_tokenRecipient.abi
+test_DAO_Token_hyp_tokenRecipient.bin
 
 bin
 out

@@ -1,14 +1,14 @@
 import assert from 'assert';
 
 import { isNil } from '../common/helpers';
-import { bindSolcMethod } from './helpers';
+import { bindHypcMethod } from './helpers';
 
-export function setupCompile (solJson, core) {
+export function setupCompile (hypJson, core) {
   return {
-    compileJson: bindCompileJson(solJson),
-    compileJsonCallback: bindCompileJsonCallback(solJson, core),
-    compileJsonMulti: bindCompileJsonMulti(solJson),
-    compileStandard: bindCompileStandard(solJson, core)
+    compileJson: bindCompileJson(hypJson),
+    compileJsonCallback: bindCompileJsonCallback(hypJson, core),
+    compileJsonMulti: bindCompileJsonMulti(hypJson),
+    compileStandard: bindCompileStandard(hypJson, core)
   };
 }
 
@@ -17,14 +17,14 @@ export function setupCompile (solJson, core) {
  **********************/
 
 /**
- * Returns a binding to the solidity compileJSON method.
+ * Returns a binding to the hyperion compileJSON method.
  * input (text), optimize (bool) -> output (jsontext)
  *
- * @param solJson The Emscripten compiled Solidity object.
+ * @param hypJson The Emscripten compiled Hyperion object.
  */
-function bindCompileJson (solJson) {
-  return bindSolcMethod(
-    solJson,
+function bindCompileJson (hypJson) {
+  return bindHypcMethod(
+    hypJson,
     'compileJSON',
     'string',
     ['string', 'number'],
@@ -33,14 +33,14 @@ function bindCompileJson (solJson) {
 }
 
 /**
- * Returns a binding to the solidity compileJSONMulti method.
+ * Returns a binding to the hyperion compileJSONMulti method.
  * input (jsontext), optimize (bool) -> output (jsontext)
  *
- * @param solJson The Emscripten compiled Solidity object.
+ * @param hypJson The Emscripten compiled Hyperion object.
  */
-function bindCompileJsonMulti (solJson) {
-  return bindSolcMethod(
-    solJson,
+function bindCompileJsonMulti (hypJson) {
+  return bindHypcMethod(
+    hypJson,
     'compileJSONMulti',
     'string',
     ['string', 'number'],
@@ -49,15 +49,15 @@ function bindCompileJsonMulti (solJson) {
 }
 
 /**
- * Returns a binding to the solidity compileJSONCallback method.
+ * Returns a binding to the hyperion compileJSONCallback method.
  * input (jsontext), optimize (bool), callback (ptr) -> output (jsontext)
  *
- * @param solJson The Emscripten compiled Solidity object.
- * @param coreBindings The core bound Solidity methods.
+ * @param hypJson The Emscripten compiled Hyperion object.
+ * @param coreBindings The core bound Hyperion methods.
  */
-function bindCompileJsonCallback (solJson, coreBindings) {
-  const compileInternal = bindSolcMethod(
-    solJson,
+function bindCompileJsonCallback (hypJson, coreBindings) {
+  const compileInternal = bindHypcMethod(
+    hypJson,
     'compileJSONCallback',
     'string',
     ['string', 'number', 'number'],
@@ -67,25 +67,25 @@ function bindCompileJsonCallback (solJson, coreBindings) {
   if (isNil(compileInternal)) return null;
 
   return function (input, optimize, readCallback) {
-    return runWithCallbacks(solJson, coreBindings, readCallback, compileInternal, [input, optimize]);
+    return runWithCallbacks(hypJson, coreBindings, readCallback, compileInternal, [input, optimize]);
   };
 }
 
 /**
- * Returns a binding to the solidity solidity_compile method with a fallback to
+ * Returns a binding to the hyperion hyperion_compile method with a fallback to
  * compileStandard.
  * input (jsontext), callback (optional >= v6 only - ptr) -> output (jsontext)
  *
- * @param solJson The Emscripten compiled Solidity object.
- * @param coreBindings The core bound Solidity methods.
+ * @param hypJson The Emscripten compiled Hyperion object.
+ * @param coreBindings The core bound Hyperion methods.
  */
-function bindCompileStandard (solJson, coreBindings) {
+function bindCompileStandard (hypJson, coreBindings) {
   let boundFunctionStandard: any = null;
-  let boundFunctionSolidity: any = null;
+  let boundFunctionHyperion: any = null;
 
   // input (jsontext), callback (ptr) -> output (jsontext)
-  const compileInternal = bindSolcMethod(
-    solJson,
+  const compileInternal = bindHypcMethod(
+    hypJson,
     'compileStandard',
     'string',
     ['string', 'number'],
@@ -94,18 +94,18 @@ function bindCompileStandard (solJson, coreBindings) {
 
   if (coreBindings.isVersion6OrNewer) {
     // input (jsontext), callback (ptr), callback_context (ptr) -> output (jsontext)
-    boundFunctionSolidity = bindSolcMethod(
-      solJson,
-      'solidity_compile',
+    boundFunctionHyperion = bindHypcMethod(
+      hypJson,
+      'hyperion_compile',
       'string',
       ['string', 'number', 'number'],
       null
     );
   } else {
     // input (jsontext), callback (ptr) -> output (jsontext)
-    boundFunctionSolidity = bindSolcMethod(
-      solJson,
-      'solidity_compile',
+    boundFunctionHyperion = bindHypcMethod(
+      hypJson,
+      'hyperion_compile',
       'string',
       ['string', 'number'],
       null
@@ -114,13 +114,13 @@ function bindCompileStandard (solJson, coreBindings) {
 
   if (!isNil(compileInternal)) {
     boundFunctionStandard = function (input, readCallback) {
-      return runWithCallbacks(solJson, coreBindings, readCallback, compileInternal, [input]);
+      return runWithCallbacks(hypJson, coreBindings, readCallback, compileInternal, [input]);
     };
   }
 
-  if (!isNil(boundFunctionSolidity)) {
+  if (!isNil(boundFunctionHyperion)) {
     boundFunctionStandard = function (input, callbacks) {
-      return runWithCallbacks(solJson, coreBindings, callbacks, boundFunctionSolidity, [input]);
+      return runWithCallbacks(hypJson, coreBindings, callbacks, boundFunctionHyperion, [input]);
     };
   }
 
@@ -162,7 +162,7 @@ function wrapCallbackWithKind (coreBindings, callback) {
 }
 
 // calls compile() with args || cb
-function runWithCallbacks (solJson, coreBindings, callbacks, compile, args) {
+function runWithCallbacks (hypJson, coreBindings, callbacks, compile, args) {
   if (callbacks) {
     assert(typeof callbacks === 'object', 'Invalid callback object specified.');
   } else {
@@ -202,7 +202,7 @@ function runWithCallbacks (solJson, coreBindings, callbacks, compile, args) {
 
     singleCallback = wrapCallbackWithKind(coreBindings, singleCallback);
   } else {
-    // Old Solidity version only supported imports.
+    // Old Hyperion version only supported imports.
     singleCallback = wrapCallback(coreBindings, readCallback);
   }
 

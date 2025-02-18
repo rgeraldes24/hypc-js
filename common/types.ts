@@ -5,9 +5,9 @@
  * configurations can be seen below.
  *
  * {
- *     "lib.sol:L1": "0x...",
- *     "lib.sol:L2": "0x...",
- *     "lib.sol": {"L3": "0x..."}
+ *     "lib.hyp:L1": "Z...",
+ *     "lib.hyp:L2": "Z...",
+ *     "lib.hyp": {"L3": "Z..."}
  * }
  */
 export interface LibraryAddresses {

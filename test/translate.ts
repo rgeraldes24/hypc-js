@@ -38,7 +38,7 @@ tape('Version string to Semver translator', function (t) {
     st.end();
   });
   t.test('Old style 0.3.5', function (st) {
-    // The one in the solc-bin list
+    // The one in the hypc-bin list
     st.equal(versionToSemver('0.3.5-371690f0/Release-Emscripten/clang/Interpreter'), '0.3.5+commit.371690f0');
     // The actual one reported by the compiler
     st.equal(versionToSemver('0.3.5-0/Release-Emscripten/clang/Interpreter'), '0.3.5');
@@ -53,7 +53,7 @@ tape('Version string to Semver translator', function (t) {
 tape('prettyPrintLegacyAssemblyJSON', function (t) {
   t.test('Works properly', function (st) {
     const fixtureAsmJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'resources/fixtureAsmJson.json')).toString());
-    const fixtureAsmJsonSource = fs.readFileSync(path.resolve(__dirname, 'resources/fixtureAsmJson.sol')).toString();
+    const fixtureAsmJsonSource = fs.readFileSync(path.resolve(__dirname, 'resources/fixtureAsmJson.hyp')).toString();
     const fixtureAsmJsonOutput = fs.readFileSync(path.resolve(__dirname, 'resources/fixtureAsmJson.output')).toString();
     st.equal(translate.prettyPrintLegacyAssemblyJSON(fixtureAsmJson, fixtureAsmJsonSource), fixtureAsmJsonOutput);
     st.end();

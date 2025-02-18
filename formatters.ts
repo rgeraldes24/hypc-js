@@ -3,7 +3,7 @@ export function formatFatalError (message) {
     errors: [
       {
         type: 'JSONError',
-        component: 'solcjs',
+        component: 'hypcjs',
         severity: 'error',
         message: message,
         formattedMessage: 'Error: ' + message

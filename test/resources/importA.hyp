@@ -1,4 +1,4 @@
-import "./importB.sol";
+import "./importB.hyp";
 
 contract C {
     function f() public returns (uint) {

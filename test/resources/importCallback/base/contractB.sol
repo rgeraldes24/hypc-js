@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.0;
+pragma hyperion >=0.0;
 
-import "./contractA.sol";
+import "./contractA.hyp";
 
 contract B {}

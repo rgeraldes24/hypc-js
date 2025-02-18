@@ -46,7 +46,7 @@ function replacePlaceholder (bytecode, label, address) {
  * See [Library Linking](https://docs.soliditylang.org/en/latest/using-the-compiler.html#library-linking)
  * for a full explanation of the linking process.
  *
- * Example of a legacy placeholder: `__lib.sol:L_____________________________`
+ * Example of a legacy placeholder: `__lib.hyp:L_____________________________`
  * Example of a new-style placeholder: `__$cb901161e812ceb78cfe30ca65050c4337$__`
  *
  * @param bytecode Hex-encoded bytecode string. All 40-byte substrings starting and ending with
@@ -71,7 +71,7 @@ function linkBytecode (bytecode: string, libraries: LibraryAddresses): string {
     }
 
     // API compatible with the standard JSON i/o
-    // {"lib.sol": {"L": "0x..."}}
+    // {"lib.hyp": {"L": "Z..."}}
     if (isObject(libraryObjectOrAddress)) {
       for (const [unqualifiedLibraryName, address] of Object.entries(libraryObjectOrAddress)) {
         librariesComplete[unqualifiedLibraryName] = address;
@@ -81,7 +81,7 @@ function linkBytecode (bytecode: string, libraries: LibraryAddresses): string {
       continue;
     }
 
-    // backwards compatible API for early solc-js versions
+    // backwards compatible API for early hypc-js versions
     const parsed = fullyQualifiedLibraryName.match(/^(?<sourceUnitName>[^:]+):(?<unqualifiedLibraryName>.+)$/);
     const libraryAddress = libraryObjectOrAddress as string;
 
@@ -112,17 +112,17 @@ function linkBytecode (bytecode: string, libraries: LibraryAddresses): string {
 
 /**
  * Finds locations of all library address placeholders in the hex-encoded bytecode.
- * Returns information in a format matching `evm.bytecode.linkReferences` output
+ * Returns information in a format matching `zvm.bytecode.linkReferences` output
  * in Standard JSON.
  *
  * See [Library Linking](https://docs.soliditylang.org/en/latest/using-the-compiler.html#library-linking)
  * for a full explanation of library placeholders and linking process.
  *
- * WARNING: The output matches `evm.bytecode.linkReferences` exactly only in
+ * WARNING: The output matches `zvm.bytecode.linkReferences` exactly only in
  * case of old-style placeholders created from fully qualified library names
  * of no more than 36 characters, and even then only if the name does not start
  * or end with an underscore. This is different from
- * `evm.bytecode.linkReferences`, which uses fully qualified library names.
+ * `zvm.bytecode.linkReferences`, which uses fully qualified library names.
  * This is a limitation of the placeholder format - the fully qualified names
  * are not preserved in the compiled bytecode and cannot be reconstructed
  * without external information.
@@ -135,13 +135,13 @@ function linkBytecode (bytecode: string, libraries: LibraryAddresses): string {
  * it's the first 34 characters of the hex-encoded hash of the fully qualified
  * library name, with a leading and trailing $ character added. Note that the
  * offsets and lengths refer to the *binary* (not hex-encoded) bytecode, just
- * like in `evm.bytecode.linkReferences`.
+ * like in `zvm.bytecode.linkReferences`.
  */
 function findLinkReferences (bytecode: string): LinkReferences {
   assert(typeof bytecode === 'string');
 
   // find 40 bytes in the pattern of __...<36 digits>...__
-  // e.g. __Lib.sol:L_____________________________
+  // e.g. __Lib.hyp:L_____________________________
   const linkReferences: LinkReferences = {};
 
   let offset = 0;

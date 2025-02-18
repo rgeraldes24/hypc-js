@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 
 import * as semver from 'semver';
-import solc from './';
+import hypc from './';
 
 const { version: packageVersion } = require('./package.json');
 
-const solcVersion = (solc as any).version();
+const hypcVersion = (hypc as any).version();
 
-console.log('solcVersion: ' + solcVersion);
+console.log('hypcVersion: ' + hypcVersion);
 console.log('packageVersion: ' + packageVersion);
 
-if (semver.eq(packageVersion, solcVersion)) {
+if (semver.eq(packageVersion, hypcVersion)) {
   console.log('Version matching');
   process.exit(0);
 } else {

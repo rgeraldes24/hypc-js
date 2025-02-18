@@ -4,7 +4,7 @@
     "target": "esnext",
     "module": "commonjs",
     "resolveJsonModule": true,
-    // This is needed for backwards-compatibility, to keep imports of the form `wrapper = require('solc/wrapper)`
+    // This is needed for backwards-compatibility, to keep imports of the form `wrapper = require('hypc/wrapper)`
     // working like they did before the TypeScript migration.
     // TODO: Drop it in the next breaking release.
     "esModuleInterop": true,

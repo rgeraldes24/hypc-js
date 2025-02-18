@@ -8,12 +8,12 @@ import translate from './translate';
 
 const Module = module.constructor as any;
 
-function wrapper (soljson) {
+function wrapper (hypjson) {
   const {
     coreBindings,
     compileBindings,
     methodFlags
-  } = setupBindings(soljson);
+  } = setupBindings(hypjson);
 
   return {
     version: coreBindings.version,
@@ -51,16 +51,16 @@ function loadRemoteVersion (versionString, callback) {
       response.pipe(memoryStream);
       response.on('end', () => {
         // Based on the require-from-string package.
-        const soljson = new Module();
-        soljson._compile(memoryStream.toString(), `soljson-${versionString}.js`);
+        const hypjson = new Module();
+        hypjson._compile(memoryStream.toString(), `hypjson-${versionString}.js`);
 
         if (module.parent && module.parent.children) {
           // Make sure the module is plugged into the hierarchy correctly to have parent
           // properly garbage collected.
-          module.parent.children.splice(module.parent.children.indexOf(soljson), 1);
+          module.parent.children.splice(module.parent.children.indexOf(hypjson), 1);
         }
 
-        callback(null, wrapper(soljson.exports));
+        callback(null, wrapper(hypjson.exports));
       });
     }
   }).on('error', function (error) {
@@ -82,8 +82,8 @@ function compileStandardWrapper (compile, inputRaw, readCallback) {
     return formatFatalError(`Invalid JSON supplied: ${e.message}`);
   }
 
-  if (input.language !== 'Solidity') {
-    return formatFatalError('Only "Solidity" is supported as a language.');
+  if (input.language !== 'Hyperion') {
+    return formatFatalError('Only "Hyperion" is supported as a language.');
   }
 
   // NOTE: this is deliberately `== null`

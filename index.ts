@@ -1,4 +1,4 @@
 import wrapper from './wrapper';
 
-const soljson = require('./soljson.js');
-export = wrapper(soljson);
+const hypjson = require('./hypjson.js');
+export = wrapper(hypjson);

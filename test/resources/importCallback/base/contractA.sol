@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.0;
+pragma hyperion >=0.0;
 
-import "libX.sol";
-import "libY.sol";
-import "libZ.sol";
+import "libX.hyp";
+import "libY.hyp";
+import "libZ.hyp";
 
 contract A {}

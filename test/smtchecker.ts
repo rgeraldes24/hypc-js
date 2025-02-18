@@ -1,10 +1,10 @@
 import tape from 'tape';
 import * as semver from 'semver';
-import solc from '../';
+import hypc from '../';
 import smtchecker from '../smtchecker';
 import smtsolver from '../smtsolver';
 
-const preamble = 'pragma solidity >=0.0;\n// SPDX-License-Identifier: GPL-3.0\n';
+const preamble = 'pragma hyperion >=0.0;\n// SPDX-License-Identifier: GPL-3.0\n';
 //
 tape('SMTChecker', function (t) {
   // We use null for `solverFunction` and `solver` when calling `handleSMTQueries`
@@ -66,8 +66,8 @@ tape('SMTCheckerWithSolver', function (t) {
       return;
     }
 
-    if (semver.lt(solc.semver(), '0.8.7')) {
-      st.skip('This test requires Solidity 0.8.7 to enable all SMTChecker options.');
+    if (semver.lt(hypc.semver(), '0.8.7')) {
+      st.skip('This test requires Hyperion 0.8.7 to enable all SMTChecker options.');
       st.end();
       return;
     }
@@ -82,18 +82,18 @@ tape('SMTCheckerWithSolver', function (t) {
     const source = { a: { content: preamble + '\ncontract C { function f(uint x) public pure { assert(x > 0); } }' } };
 
     const input = {
-      language: 'Solidity',
+      language: 'Hyperion',
       sources: source,
       settings: settings
     };
 
-    const output = JSON.parse(solc.compile(JSON.stringify(input)));
+    const output = JSON.parse(hypc.compile(JSON.stringify(input)));
     st.ok(output);
 
     const newInput = smtchecker.handleSMTQueries(input, output, smtsolver.smtSolver, z3[0]);
     st.notEqual(newInput, null);
 
-    const newOutput = JSON.parse(solc.compile(JSON.stringify(newInput)));
+    const newOutput = JSON.parse(hypc.compile(JSON.stringify(newInput)));
     st.ok(newOutput);
 
     const smtErrors = newOutput.errors.filter(e => e.errorCode === '6328');
