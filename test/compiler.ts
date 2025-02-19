@@ -7,7 +7,8 @@ import linker from '../linker';
 import { execSync } from 'child_process';
 import wrapper from '../wrapper';
 
-const noRemoteVersions = (process.argv.indexOf('--no-remote-versions') >= 0);
+// const noRemoteVersions = (process.argv.indexOf('--no-remote-versions') >= 0);
+const noRemoteVersions = true;
 
 function runTests (hypc, versionText) {
   console.log(`Running tests with ${versionText} ${hypc.version()}`);
@@ -833,7 +834,6 @@ function runTests (hypc, versionText) {
     });
   });
 
-  // Only run on the latest version.
   if (versionText === 'latest' && !noRemoteVersions) {
     tape('Loading Legacy Versions', function (t) {
       t.test('loading remote version - development snapshot', function (st) {

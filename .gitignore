@@ -27,7 +27,7 @@ build/Release
 node_modules
 
 # hypc-js
-hypjson.js
+# hypjson.js
 test_DAO_Token_hyp_Token.abi
 test_DAO_Token_hyp_Token.bin
 test_DAO_Token_hyp_TokenInterface.abi
